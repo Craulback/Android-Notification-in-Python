@@ -21,10 +21,15 @@ public class Notify extends BroadcastReceiver{
   // This function is run when the BroadcastReceiver is fired
   @Override
   public void onReceive(Context context, Intent intent) {
+    // Get the notification data from the intent
+    int notification_id = intent.getExtras().getInt("id");
+    String title = String.valueOf(intent.getExtras().get("title"));
+    String message = String.valueOf(intent.getExtras().get("message"));
+    String ticker = String.valueOf(intent.getExtras().get("ticker"));
     // function to create notification channel
     this.createNotificationChannel(context);
     // function to create the notification
-    this.sendNotification(context, intent);
+    this.sendNotification(context, intent, title, message, ticker);
   }
 
   private void createNotificationChannel(Context context) {
@@ -52,19 +57,21 @@ public class Notify extends BroadcastReceiver{
         }
     }
 
-    private void sendNotification(Context context, Intent intent) {
+    private void sendNotification(Context context, Intent intent, String title, String message, String ticker, int notification_id) {
          Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-         //create an unique notification id. Here it is done using random numbers
-         int notification_id = (int)(Math.random()*(8000-1+1)+1);
 
          NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "NOTIFICATION")
                  .setSmallIcon(R.drawable.ic_launcher)
-                 .setContentTitle("Your notification title here")
-                 .setContentText("Your notification description here")
-                 .setTicker("New Notification")
+                 .setContentTitle(title)
+                 .setContentText(message)
+                 .setTicker(ticker)
                  .setSound(uri)
                  .setAutoCancel(true)
                  .setOnlyAlertOnce(false)
+                //  Optionally, for longer notifications, treat "setContentText" as the subject line,
+                //  uncomment the 2 lines below and use "bigText" for the message body:
+                //  .setStyle(new NotificationCompat.BigTextStyle()
+                //  .bigText(message));
 
          NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
          notificationManager.notify(notification_id,builder.build());
