@@ -1,6 +1,6 @@
 from jnius import autoclass, cast
 from time import time_ns
-from random import getrandbits
+from random import randint
 
 # Gets the current running instance of the app so as to speak
 # Needs to be run from the main thread
@@ -35,10 +35,10 @@ intent.putExtra("ticker", ticker)
 # Create a pending intent to be fired later in time by the alarm Manager
 # Here the intent_id is a variable holding a numeric value that uniquely identifies the
 # pending intent. Keep this id so that you can cancel scheduled alarms later on.
-saved_ids = [] #TODO: save with DictStore or something
-intent_id = getrandbits(8)
+saved_ids = [] #TODO: save with kivy.storage.DictStore or something
+intent_id = randint(1000,9999)
 while intent_id in saved_ids:  # Make sure the id is unique
-    intent_id = getrandbits(8)
+    intent_id = randint(1000,9999)
 saved_ids.append(intent_id)
 intent.putExtra("id", intent_id)
 # There are various types of pending intent flags that can be set based on what you want.
